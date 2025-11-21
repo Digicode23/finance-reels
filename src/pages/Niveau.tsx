@@ -1,29 +1,43 @@
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Star, Heart, Trophy } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { BnpCTA } from "@/components/BnpCTA";
 import { BottomNav } from "@/components/BottomNav";
+import { Progress } from "@/components/ui/progress";
 
-const levelContent: Record<string, { title: string; content: string; isAdvanced: boolean }> = {
+const levelContent: Record<string, { title: string; content: string; question: string; answers: string[]; correctAnswer: number; isAdvanced: boolean }> = {
   "1": {
-    title: "Débuter avec le PEA",
-    content: "Le Plan d'Épargne en Actions (PEA) est un compte titres qui permet d'investir en bourse tout en bénéficiant d'avantages fiscaux. Il existe deux types : le PEA classique (jusqu'à 150 000€) et le PEA-PME (jusqu'à 225 000€).",
+    title: "Introduction au PEA",
+    content: "Le Plan d'Épargne en Actions (PEA) est un compte titres qui permet d'investir en bourse tout en bénéficiant d'avantages fiscaux exceptionnels. Il existe deux types : le PEA classique (jusqu'à 150 000€) et le PEA-PME (jusqu'à 225 000€).",
+    question: "Quel est le plafond du PEA classique ?",
+    answers: ["75 000€", "150 000€", "225 000€"],
+    correctAnswer: 1,
     isAdvanced: false,
   },
   "2": {
     title: "Fiscalité du PEA",
     content: "Après 5 ans de détention, les gains réalisés sur un PEA sont exonérés d'impôt sur le revenu (seuls les prélèvements sociaux de 17,2% s'appliquent). C'est l'un des placements les plus avantageux fiscalement en France.",
+    question: "Après combien d'années les gains du PEA sont-ils exonérés d'impôt sur le revenu ?",
+    answers: ["3 ans", "5 ans", "8 ans"],
+    correctAnswer: 1,
     isAdvanced: false,
   },
   "3": {
     title: "Actions et ETF",
     content: "Dans un PEA, vous pouvez investir dans des actions d'entreprises européennes et des ETF (fonds indiciels). Les ETF permettent de diversifier facilement votre portefeuille à moindre coût.",
+    question: "Que signifie ETF ?",
+    answers: ["European Trading Fund", "Exchange Traded Fund", "Equity Transfer Fund"],
+    correctAnswer: 1,
     isAdvanced: false,
   },
   "5": {
     title: "Simulation d'investissement",
     content: "Simulez votre stratégie d'investissement. Avec un versement mensuel de 200€ sur 20 ans et un rendement moyen de 7%, vous pourriez obtenir environ 104 000€.",
+    question: "Quelle est la clé d'un bon investissement en PEA ?",
+    answers: ["Investir tout d'un coup", "La régularité des versements", "Attendre le bon moment"],
+    correctAnswer: 1,
     isAdvanced: true,
   },
 };
@@ -31,84 +45,190 @@ const levelContent: Record<string, { title: string; content: string; isAdvanced:
 const Niveau = () => {
   const navigate = useNavigate();
   const { id, niveauId } = useParams();
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [xpEarned, setXpEarned] = useState(0);
   
   const level = niveauId ? levelContent[niveauId] : levelContent["1"];
   
+  const handleAnswerClick = (index: number) => {
+    if (selectedAnswer !== null) return; // Already answered
+    
+    setSelectedAnswer(index);
+    const correct = index === level.correctAnswer;
+    setIsCorrect(correct);
+    
+    if (correct) {
+      setXpEarned(50);
+      // Animate XP gain
+      setTimeout(() => {
+        setXpEarned(0);
+      }, 2000);
+    }
+  };
+
+  const getAnswerClass = (index: number) => {
+    if (selectedAnswer === null) {
+      return "border-gray-300 hover:border-duo-green hover:bg-green-50";
+    }
+    if (index === level.correctAnswer) {
+      return "border-green-500 bg-green-50";
+    }
+    if (index === selectedAnswer && !isCorrect) {
+      return "border-red-500 bg-red-50";
+    }
+    return "border-gray-300 opacity-50";
+  };
+
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-20">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
+      <header className="sticky top-0 z-40 bg-white shadow-md">
         <div className="px-4 py-4">
-          <button 
-            onClick={() => navigate(`/parcours/${id}`)}
-            className="flex items-center gap-2 text-foreground mb-3"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-medium">Retour au parcours</span>
-          </button>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full gradient-bnp flex items-center justify-center text-white text-sm font-semibold">
-              {niveauId}
+          <div className="flex items-center justify-between mb-3">
+            <button 
+              onClick={() => navigate(`/parcours/${id}`)}
+              className="flex items-center gap-2 text-foreground"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            
+            {/* Progress bar */}
+            <div className="flex-1 mx-4">
+              <Progress value={selectedAnswer !== null ? 100 : 50} className="h-4 bg-gray-200" />
             </div>
-            <h1 className="text-xl font-bold">{level.title}</h1>
+
+            {/* Hearts */}
+            <div className="flex items-center gap-1">
+              <Heart className="w-6 h-6 text-pink-500" fill="currentColor" />
+              <span className="font-bold text-pink-500">5</span>
+            </div>
           </div>
         </div>
       </header>
 
+      {/* XP Animation */}
+      {xpEarned > 0 && (
+        <div className="fixed top-1/3 left-1/2 -translate-x-1/2 z-50 animate-bounce">
+          <div className="bg-yellow-500 text-white px-6 py-3 rounded-full shadow-elevated font-bold text-xl">
+            +{xpEarned} XP
+          </div>
+        </div>
+      )}
+
       {/* Content */}
       <div className="px-4 py-6 space-y-6">
+        {/* Level badge */}
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-full gradient-bnp flex items-center justify-center text-white text-lg font-bold shadow-button">
+            {niveauId}
+          </div>
+          <h1 className="text-2xl font-bold">{level.title}</h1>
+        </div>
+
         {/* Lesson card */}
-        <Card className="p-6 shadow-card">
+        <Card className="p-6 shadow-card bg-white border-2 border-gray-100">
           <div className="space-y-4">
-            <p className="text-foreground leading-relaxed">
+            <p className="text-foreground leading-relaxed text-lg">
               {level.content}
             </p>
             
             {level.isAdvanced && (
-              <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
-                <h3 className="font-semibold text-primary mb-2">💡 Point clé</h3>
-                <p className="text-sm text-foreground">
-                  La régularité des versements et la durée d'investissement sont vos meilleurs alliés pour faire fructifier votre PEA.
-                </p>
+              <div className="mt-6 p-4 bg-yellow-50 rounded-2xl border-2 border-yellow-200">
+                <div className="flex items-start gap-3">
+                  <div className="text-3xl">💡</div>
+                  <div>
+                    <h3 className="font-bold text-yellow-800 mb-1">Point clé</h3>
+                    <p className="text-sm text-yellow-900">
+                      La régularité des versements et la durée d'investissement sont vos meilleurs alliés pour faire fructifier votre PEA.
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
           </div>
         </Card>
 
-        {/* Interactive quiz (simple example) */}
-        <Card className="p-6 shadow-card">
-          <h3 className="font-semibold text-foreground mb-4">📝 Question rapide</h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            Après combien d'années les gains d'un PEA sont-ils exonérés d'impôt sur le revenu ?
+        {/* Quiz card */}
+        <Card className="p-6 shadow-card bg-white border-2 border-gray-100">
+          <h3 className="font-bold text-xl mb-2 flex items-center gap-2">
+            <span className="text-2xl">🤔</span>
+            Question
+          </h3>
+          <p className="text-foreground mb-6 text-lg">
+            {level.question}
           </p>
           
-          <div className="space-y-2">
-            {["3 ans", "5 ans", "8 ans"].map((answer, index) => (
+          <div className="space-y-3">
+            {level.answers.map((answer, index) => (
               <button
                 key={index}
-                className="w-full p-3 text-left rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-colors"
+                onClick={() => handleAnswerClick(index)}
+                disabled={selectedAnswer !== null}
+                className={`
+                  w-full p-4 text-left rounded-2xl border-2 transition-all font-medium text-lg
+                  ${getAnswerClass(index)}
+                  ${selectedAnswer === null ? "active:scale-95" : ""}
+                  disabled:cursor-not-allowed
+                `}
               >
-                {answer}
+                <div className="flex items-center justify-between">
+                  <span>{answer}</span>
+                  {selectedAnswer !== null && index === level.correctAnswer && (
+                    <CheckCircle2 className="w-6 h-6 text-green-600" />
+                  )}
+                  {selectedAnswer === index && !isCorrect && (
+                    <div className="w-6 h-6 text-red-600 font-bold">✗</div>
+                  )}
+                </div>
               </button>
             ))}
           </div>
+
+          {/* Feedback */}
+          {isCorrect !== null && (
+            <div className={`
+              mt-6 p-4 rounded-2xl border-2 animate-in slide-in-from-bottom
+              ${isCorrect ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"}
+            `}>
+              <div className="flex items-center gap-3">
+                <div className="text-4xl">{isCorrect ? "🎉" : "😢"}</div>
+                <div>
+                  <h4 className={`font-bold text-lg ${isCorrect ? "text-green-800" : "text-red-800"}`}>
+                    {isCorrect ? "Bravo !" : "Pas tout à fait..."}
+                  </h4>
+                  <p className={`text-sm ${isCorrect ? "text-green-700" : "text-red-700"}`}>
+                    {isCorrect 
+                      ? "Tu as gagné 50 XP ! Continue comme ça !" 
+                      : "Réessaie, tu vas y arriver !"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </Card>
 
-        {/* BNP CTA */}
-        <BnpCTA 
-          productName="le PEA BNP Paribas"
-          productUrl="https://www.bnpparibas.fr"
-        />
+        {/* BNP CTA - only show after correct answer */}
+        {isCorrect && (
+          <div className="animate-in slide-in-from-bottom">
+            <BnpCTA 
+              productName="le PEA BNP Paribas"
+              productUrl="https://www.bnpparibas.fr"
+            />
+          </div>
+        )}
 
         {/* Complete button */}
-        <Button 
-          className="w-full gradient-bnp text-primary-foreground font-semibold shadow-md"
-          size="lg"
-          onClick={() => navigate(`/parcours/${id}`)}
-        >
-          <CheckCircle2 className="mr-2 w-5 h-5" />
-          Marquer comme terminé
-        </Button>
+        {isCorrect && (
+          <Button 
+            className="w-full gradient-bnp text-white font-bold py-6 text-lg rounded-2xl shadow-button hover:shadow-elevated transition-all active:translate-y-1"
+            size="lg"
+            onClick={() => navigate(`/parcours/${id}`)}
+          >
+            <CheckCircle2 className="mr-2 w-6 h-6" />
+            Continuer
+          </Button>
+        )}
       </div>
 
       <BottomNav />
