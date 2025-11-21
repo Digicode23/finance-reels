@@ -71,44 +71,52 @@ const Parcours = () => {
 
   const getIconForType = (type: string, isCompleted: boolean) => {
     if (isCompleted) {
-      return <Star className="w-7 h-7" fill="currentColor" />;
+      return <Star className="w-10 h-10 drop-shadow-lg" fill="currentColor" />;
     }
     
     switch (type) {
       case "video":
-        return <Video className="w-6 h-6" />;
+        return <Video className="w-9 h-9 drop-shadow-lg" />;
       case "chest":
-        return <Gift className="w-7 h-7" />;
+        return <Gift className="w-10 h-10 drop-shadow-lg" />;
       case "boss":
-        return <Trophy className="w-8 h-8" />;
+        return <Trophy className="w-11 h-11 drop-shadow-lg" />;
       case "practice":
-        return <Zap className="w-6 h-6" />;
+        return <Zap className="w-9 h-9 drop-shadow-lg" />;
       case "story":
-        return <Book className="w-6 h-6" />;
+        return <Book className="w-9 h-9 drop-shadow-lg" />;
       default:
-        return <div className="w-3 h-3 rounded-full bg-white" />;
+        return <div className="w-4 h-4 rounded-full bg-white drop-shadow-lg" />;
     }
   };
 
-  const getColorClass = (color: string, isCompleted: boolean, isLocked: boolean) => {
+  const getColorClass = (color: string, isCompleted: boolean, isLocked: boolean, type: string) => {
     if (isCompleted) {
-      return "bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-button";
+      return "bg-gradient-to-b from-yellow-300 via-yellow-400 to-yellow-600 level-button-3d border-4 border-white/30";
     }
     if (isLocked) {
-      return "bg-gray-300 border-4 border-gray-200";
+      return "bg-gradient-to-b from-gray-200 to-gray-300 level-button-locked border-4 border-gray-100";
+    }
+    
+    // Special styles for chest and boss
+    if (type === "chest") {
+      return "chest-button border-4 border-white/20";
+    }
+    if (type === "boss") {
+      return "coin-button border-4 border-white/20";
     }
     
     switch (color) {
       case "green":
-        return "bg-gradient-to-br from-green-400 to-green-600 shadow-button hover:from-green-500 hover:to-green-700";
+        return "bg-gradient-to-b from-green-300 via-green-400 to-green-600 level-button-3d border-4 border-white/30";
       case "purple":
-        return "bg-gradient-to-br from-purple-400 to-purple-600 shadow-button hover:from-purple-500 hover:to-purple-700";
+        return "bg-gradient-to-b from-purple-300 via-purple-400 to-purple-600 level-button-3d border-4 border-white/30";
       case "gold":
-        return "bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-button hover:from-yellow-500 hover:to-yellow-700";
+        return "bg-gradient-to-b from-yellow-300 via-yellow-400 to-yellow-600 level-button-3d border-4 border-white/30";
       case "blue":
-        return "bg-gradient-to-br from-blue-400 to-blue-600 shadow-button hover:from-blue-500 hover:to-blue-700";
+        return "bg-gradient-to-b from-blue-300 via-blue-400 to-blue-600 level-button-3d border-4 border-white/30";
       default:
-        return "bg-gradient-to-br from-green-400 to-green-600 shadow-button";
+        return "bg-gradient-to-b from-green-300 via-green-400 to-green-600 level-button-3d border-4 border-white/30";
     }
   };
 
@@ -176,12 +184,19 @@ const Parcours = () => {
               {/* Chapter header banner */}
               <div 
                 className={`
-                  relative rounded-2xl p-6 mb-8 shadow-elevated overflow-hidden
+                  relative rounded-2xl p-6 mb-8 chapter-banner-3d overflow-hidden
                   ${chapter.id === 1 ? "bg-gradient-to-br from-green-400 to-green-600" : ""}
                   ${chapter.id === 2 ? "bg-gradient-to-br from-purple-400 to-purple-600" : ""}
                   ${chapter.id === 3 ? "bg-gradient-to-br from-yellow-400 to-yellow-600" : ""}
                 `}
               >
+                {/* Icon button in top right corner */}
+                <button className="absolute top-4 right-4 w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center hover:bg-white/30 transition-colors z-20 active:scale-95">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+
                 <div className="relative z-10">
                   <div className="text-white/90 text-xs uppercase tracking-wider font-bold mb-1">
                     Chapitre {chapter.id}, Unité {chapter.unit}
@@ -236,10 +251,10 @@ const Parcours = () => {
                           {/* Connector line to next level */}
                           {levelIndex < chapterLevels.length - 1 && (
                             <div 
-                              className="absolute w-1 bg-gray-300 rounded-full"
+                              className="absolute w-1.5 bg-gray-300 rounded-full shadow-sm"
                               style={{
-                                height: "60px",
-                                top: "85px",
+                                height: "80px",
+                                top: "100px",
                                 left: "50%",
                                 transform: "translateX(-50%)",
                                 zIndex: 0,
@@ -252,14 +267,14 @@ const Parcours = () => {
                             onClick={() => !level.isLocked && navigate(`/parcours/${id}/niveau/${level.id}`)}
                             disabled={level.isLocked}
                             className={`
-                              relative z-10 w-20 h-20 rounded-full flex items-center justify-center
+                              relative z-10 w-24 h-24 rounded-full flex items-center justify-center
                               text-white font-bold transition-all duration-300
-                              ${getColorClass(level.color, level.isCompleted, level.isLocked)}
-                              ${!level.isLocked ? "cursor-pointer active:scale-95 hover:scale-105" : "cursor-not-allowed opacity-60"}
+                              ${getColorClass(level.color, level.isCompleted, level.isLocked, level.type)}
+                              ${!level.isLocked ? "cursor-pointer" : "cursor-not-allowed opacity-60"}
                             `}
                           >
                             {level.isLocked ? (
-                              <Lock className="w-7 h-7 text-white/80" />
+                              <Lock className="w-8 h-8 text-white/80" />
                             ) : (
                               getIconForType(level.type, level.isCompleted)
                             )}
@@ -285,9 +300,9 @@ const Parcours = () => {
                           )}
 
                           {level.isCompleted && (
-                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 z-20">
-                              <div className="bg-green-500 rounded-full p-1 shadow-lg">
-                                <CheckCircle className="w-4 h-4 text-white" />
+                            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 z-20">
+                              <div className="bg-green-500 rounded-full p-1.5 shadow-elevated border-2 border-white">
+                                <CheckCircle className="w-5 h-5 text-white" fill="white" />
                               </div>
                             </div>
                           )}

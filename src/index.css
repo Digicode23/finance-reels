@@ -162,6 +162,73 @@ All colors MUST be HSL.
   .bounce-on-hover:active {
     transform: scale(0.95);
   }
+  
+  /* Duolingo-style 3D effect for level buttons */
+  .level-button-3d {
+    box-shadow: 
+      0 8px 0 rgba(0, 0, 0, 0.08),
+      0 10px 10px rgba(0, 0, 0, 0.1),
+      0 16px 24px rgba(0, 0, 0, 0.1),
+      inset 0 -4px 8px rgba(0, 0, 0, 0.1),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  }
+
+  .level-button-3d:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 12px 0 rgba(0, 0, 0, 0.08),
+      0 14px 14px rgba(0, 0, 0, 0.12),
+      0 20px 32px rgba(0, 0, 0, 0.12),
+      inset 0 -4px 8px rgba(0, 0, 0, 0.1),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  }
+
+  .level-button-3d:active {
+    transform: translateY(2px);
+    box-shadow: 
+      0 4px 0 rgba(0, 0, 0, 0.08),
+      0 6px 8px rgba(0, 0, 0, 0.1),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.1),
+      inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  }
+
+  .level-button-locked {
+    box-shadow: 
+      0 6px 0 rgba(0, 0, 0, 0.05),
+      0 8px 12px rgba(0, 0, 0, 0.08),
+      inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  }
+
+  /* Special chest style - beige/brown */
+  .chest-button {
+    background: linear-gradient(to bottom, #f5ddb4 0%, #d4a574 50%, #a67c52 100%);
+    box-shadow: 
+      0 8px 0 rgba(139, 90, 43, 0.3),
+      0 10px 10px rgba(0, 0, 0, 0.15),
+      0 16px 24px rgba(0, 0, 0, 0.15),
+      inset 0 -4px 8px rgba(0, 0, 0, 0.15),
+      inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  }
+
+  /* Golden coin style */
+  .coin-button {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 25%, #f0b800 50%, #ffed4e 75%, #ffd700 100%);
+    box-shadow: 
+      0 8px 0 rgba(184, 134, 11, 0.4),
+      0 10px 10px rgba(0, 0, 0, 0.15),
+      0 16px 24px rgba(255, 215, 0, 0.3),
+      inset 0 -4px 8px rgba(0, 0, 0, 0.1),
+      inset 0 4px 8px rgba(255, 255, 255, 0.5);
+  }
+
+  /* Chapter banner 3D effect */
+  .chapter-banner-3d {
+    box-shadow: 
+      0 4px 0 rgba(0, 0, 0, 0.1),
+      0 8px 16px rgba(0, 0, 0, 0.15),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.1),
+      inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  }
 }
 
 /* Hide scrollbar but keep functionality */
