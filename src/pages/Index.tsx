@@ -120,9 +120,9 @@ const Index = () => {
         <div className="flex items-center justify-between text-white">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl gradient-bnp flex items-center justify-center">
-              <span className="font-bold text-lg">F</span>
+              <span className="font-bold text-lg">P</span>
             </div>
-            <span className="font-semibold">FinLearn</span>
+            <span className="font-semibold">Paul</span>
           </div>
           <div className="flex items-center gap-3">
             <button className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
@@ -152,44 +152,28 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
         {/* Content overlay */}
-        <div className="absolute bottom-20 left-0 right-0 px-6 text-white space-y-4">
+        <div className="absolute bottom-32 left-0 right-0 px-6 text-white space-y-3">
           {/* Category badge */}
-          <div className="inline-block px-4 py-2 rounded-full gradient-bnp backdrop-blur-sm shadow-elevated">
-            <span className="text-sm font-bold uppercase tracking-wider">{currentReel.category}</span>
+          <div className="inline-block px-3 py-1.5 rounded-full gradient-bnp backdrop-blur-sm shadow-elevated">
+            <span className="text-xs font-bold uppercase tracking-wider">{currentReel.category}</span>
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl font-bold leading-tight">{currentReel.title}</h1>
+          <h1 className="text-2xl font-bold leading-tight">{currentReel.title}</h1>
 
           {/* Description */}
-          <p className="text-base text-white/90 leading-relaxed">
+          <p className="text-sm text-white/90 leading-relaxed">
             {currentReel.description}
           </p>
 
           {/* CTA Button */}
           <Button
             onClick={() => navigate(`/parcours/${currentReel.id}`)}
-            className="w-full gradient-bnp text-white font-bold py-6 text-lg rounded-2xl shadow-button hover:shadow-elevated transition-all active:translate-y-1"
+            className="w-full gradient-bnp text-white font-bold py-5 text-base rounded-2xl shadow-button hover:shadow-elevated transition-all active:translate-y-1"
           >
             En apprendre plus
-            <ArrowRight className="ml-2 w-6 h-6" />
+            <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
-        </div>
-
-        {/* Progress indicators - clickable */}
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-40">
-          {reels.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`w-1.5 h-8 rounded-full transition-all cursor-pointer hover:scale-110 ${
-                index === currentIndex
-                  ? "bg-white shadow-elevated"
-                  : "bg-white/30 hover:bg-white/50"
-              }`}
-              aria-label={`Aller au reel ${index + 1}`}
-            />
-          ))}
         </div>
 
         {/* Navigation arrows - visible on desktop */}
