@@ -59,7 +59,7 @@ const levels: Level[] = [
   { id: 2, title: "Les bases", type: "lesson", color: "green", isCompleted: true, isLocked: false, chapter: 1, unit: 1, stars: 2 },
   { id: 3, title: "Pratique", type: "practice", color: "green", isCompleted: false, isLocked: false, chapter: 1, unit: 1, isNew: true },
   { id: 4, title: "Histoire", type: "story", color: "purple", isCompleted: false, isLocked: false, chapter: 1, unit: 1 },
-  { id: 5, title: "Révision", type: "video", color: "purple", isCompleted: false, isLocked: true, chapter: 1, unit: 1 },
+  { id: 5, title: "Révision", type: "video", color: "purple", isCompleted: false, isLocked: false, chapter: 1, unit: 1 },
   
   // Chapter 2 - Unit 2
   { id: 6, title: "Niveau avancé", type: "lesson", color: "purple", isCompleted: false, isLocked: true, chapter: 2, unit: 2 },
