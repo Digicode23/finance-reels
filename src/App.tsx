@@ -8,6 +8,7 @@ import Parcours from "./pages/Parcours";
 import ParcoursHome from "./pages/ParcoursHome";
 import Niveau from "./pages/Niveau";
 import SimulationInvestissement from "./pages/SimulationInvestissement";
+import Trophees from "./pages/Trophees";
 import Profil from "./pages/Profil";
 import Parametres from "./pages/Parametres";
 import NotFound from "./pages/NotFound";
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/parcours/:id" element={<Parcours />} />
           <Route path="/parcours/:id/niveau/:niveauId" element={<Niveau />} />
           <Route path="/parcours/:id/simulation" element={<SimulationInvestissement />} />
+          <Route path="/trophees" element={<Trophees />} />
           <Route path="/profil" element={<Profil />} />
           <Route path="/parametres" element={<Parametres />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

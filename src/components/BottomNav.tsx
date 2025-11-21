@@ -54,7 +54,7 @@ export const BottomNav = () => {
         </NavLink>
         
         <NavLink
-          to="/profil"
+          to="/trophees"
           className="flex flex-col items-center justify-center gap-0.5 px-4 py-2 transition-all"
         >
           {({ isActive }) => (
@@ -77,7 +77,7 @@ export const BottomNav = () => {
         </NavLink>
         
         <NavLink
-          to="/parametres"
+          to="/profil"
           className="flex flex-col items-center justify-center gap-0.5 px-4 py-2 transition-all"
         >
           {({ isActive }) => (
