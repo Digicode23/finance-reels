@@ -54,15 +54,11 @@ const Index = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToNext = () => {
-    if (currentIndex < reels.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
+    setCurrentIndex((currentIndex + 1) % reels.length);
   };
 
   const goToPrevious = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
+    setCurrentIndex((currentIndex - 1 + reels.length) % reels.length);
   };
 
   const handlers = useSwipeable({
@@ -179,26 +175,22 @@ const Index = () => {
         {/* Navigation arrows - visible on desktop */}
         <div className="absolute inset-0 pointer-events-none">
           {/* Previous button */}
-          {currentIndex > 0 && (
-            <button
-              onClick={goToPrevious}
-              className="absolute top-1/2 left-4 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all pointer-events-auto z-40 shadow-elevated"
-              aria-label="Reel précédent"
-            >
-              <ChevronUp className="w-6 h-6" />
-            </button>
-          )}
+          <button
+            onClick={goToPrevious}
+            className="absolute top-1/2 left-4 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all pointer-events-auto z-40 shadow-elevated"
+            aria-label="Reel précédent"
+          >
+            <ChevronUp className="w-6 h-6" />
+          </button>
 
           {/* Next button */}
-          {currentIndex < reels.length - 1 && (
-            <button
-              onClick={goToNext}
-              className="absolute bottom-32 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all pointer-events-auto z-40 shadow-elevated animate-bounce"
-              aria-label="Reel suivant"
-            >
-              <ChevronDown className="w-6 h-6" />
-            </button>
-          )}
+          <button
+            onClick={goToNext}
+            className="absolute bottom-32 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all pointer-events-auto z-40 shadow-elevated animate-bounce"
+            aria-label="Reel suivant"
+          >
+            <ChevronDown className="w-6 h-6" />
+          </button>
         </div>
       </div>
 
