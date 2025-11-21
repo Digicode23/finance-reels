@@ -1,6 +1,7 @@
-import { Trophy, Star, Zap, Crown, Target, TrendingUp, Award, Sparkles, Lock } from "lucide-react";
+import { Trophy, Star, Zap, Crown, Target, TrendingUp, Award, Sparkles, Lock, Medal } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -45,6 +46,44 @@ const categoryLabels = {
   special: "✨ Spécial"
 };
 
+const topPlayers = [
+  { rank: 1, name: "Luke Skywalker", xp: 12450, avatar: "👨‍🚀" },
+  { rank: 2, name: "Leia Organa", xp: 11890, avatar: "👸" },
+  { rank: 3, name: "Han Solo", xp: 10320, avatar: "🚀" },
+  { rank: 4, name: "Obi-Wan Kenobi", xp: 9875, avatar: "🧙" },
+  { rank: 5, name: "Yoda", xp: 9234, avatar: "👽" },
+  { rank: 6, name: "Anakin Skywalker", xp: 8756, avatar: "⚔️" },
+  { rank: 7, name: "Padmé Amidala", xp: 8123, avatar: "👑" },
+  { rank: 8, name: "Antoine Dupont", xp: 850, avatar: "🙂", isCurrentUser: true },
+];
+
+const rewards = [
+  {
+    rank: 1,
+    title: "🥇 Visa Premier",
+    description: "Avec l'offre groupée Esprit Libre à partir de 7,61 € /mois",
+    cta: "En savoir plus sur la carte",
+    url: "https://mabanque.bnpparibas/fr/carte-bancaire/visa-premier",
+    gradient: "from-yellow-500 to-yellow-700",
+  },
+  {
+    rank: 2,
+    title: "🥈 Visa Classic",
+    description: "Avec l'offre groupée Esprit Libre à partir de 3,20 € /mois",
+    cta: "En savoir plus sur la carte",
+    url: "https://mabanque.bnpparibas/fr/carte-bancaire/visa-classic",
+    gradient: "from-green-500 to-green-700",
+  },
+  {
+    rank: 3,
+    title: "🥉 Visa Origin",
+    description: "Avec l'offre groupée Esprit Libre à partir de 2,96 € /mois",
+    cta: "En savoir plus sur la carte",
+    url: "https://mabanque.bnpparibas/fr/carte-bancaire/visa-origin",
+    gradient: "from-blue-500 to-blue-700",
+  },
+];
+
 const Trophees = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   
@@ -74,50 +113,180 @@ const Trophees = () => {
           </motion.div>
           
           <h1 className="text-3xl font-bold text-white text-center mb-2">
-            Tes Trophées
+            Classement & Trophées
           </h1>
-          
-          <div className="text-center mb-6">
-            <p className="text-white/90 text-lg font-semibold">
-              {unlockedCount} / {totalCount} débloqués
-            </p>
-            <div className="w-full max-w-xs mx-auto mt-3 h-3 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${completionPercentage}%` }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="h-full bg-white rounded-full shadow-glow"
-              />
-            </div>
-          </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-3 gap-3 max-w-md mx-auto">
-            <Card className="p-3 bg-white/10 border-white/20 backdrop-blur-sm">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white">{unlockedCount}</div>
-                <div className="text-xs text-white/80">Débloqués</div>
-              </div>
-            </Card>
-            <Card className="p-3 bg-white/10 border-white/20 backdrop-blur-sm">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white">
-                  {trophies.filter(t => t.isUnlocked).reduce((sum, t) => sum + t.xpReward, 0)}
-                </div>
-                <div className="text-xs text-white/80">XP gagné</div>
-              </div>
-            </Card>
-            <Card className="p-3 bg-white/10 border-white/20 backdrop-blur-sm">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white">
-                  {Math.round(completionPercentage)}%
-                </div>
-                <div className="text-xs text-white/80">Complétés</div>
-              </div>
-            </Card>
-          </div>
+          <p className="text-white/90 text-center text-sm">
+            Grimpe dans le classement mensuel et débloque des récompenses
+          </p>
         </div>
       </header>
+
+      {/* Leaderboard Section */}
+      <div className="px-4 py-6 space-y-6">
+        {/* Rewards Section */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Medal className="w-6 h-6 text-yellow-600" />
+            <h2 className="text-2xl font-bold text-foreground">
+              🎁 Récompenses du Mois
+            </h2>
+          </div>
+          <div className="grid gap-4">
+            {rewards.map((reward, index) => (
+              <motion.div
+                key={reward.rank}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card
+                  className={`p-5 bg-gradient-to-r ${reward.gradient} text-white border-0 shadow-elevated`}
+                >
+                  <div className="space-y-3">
+                    <h4 className="text-lg font-bold">{reward.title}</h4>
+                    <p className="text-sm text-white/90">{reward.description}</p>
+                    <Button
+                      className="w-full bg-white text-foreground hover:bg-white/90 font-semibold shadow-md"
+                      size="lg"
+                      asChild
+                    >
+                      <a href={reward.url} target="_blank" rel="noopener noreferrer">
+                        {reward.cta}
+                      </a>
+                    </Button>
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Top Players */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Trophy className="w-6 h-6 text-yellow-600" />
+            <h2 className="text-2xl font-bold text-foreground">
+              🏆 Top Joueurs
+            </h2>
+          </div>
+          {topPlayers.map((player, index) => (
+            <motion.div
+              key={player.rank}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 + index * 0.05 }}
+            >
+              <Card
+                className={`p-4 ${
+                  player.isCurrentUser
+                    ? "bg-gradient-to-r from-blue-100 to-purple-100 border-2 border-blue-400"
+                    : "bg-white"
+                } shadow-card`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    {/* Rank Badge */}
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold ${
+                        player.rank === 1
+                          ? "bg-gradient-to-br from-yellow-400 to-yellow-600 text-white"
+                          : player.rank === 2
+                          ? "bg-gradient-to-br from-slate-300 to-slate-500 text-white"
+                          : player.rank === 3
+                          ? "bg-gradient-to-br from-orange-400 to-orange-600 text-white"
+                          : "bg-gray-200 text-gray-700"
+                      } shadow-md`}
+                    >
+                      {player.rank <= 3 ? (
+                        <Trophy className="w-6 h-6" />
+                      ) : (
+                        `#${player.rank}`
+                      )}
+                    </div>
+
+                    {/* Avatar & Name */}
+                    <div className="flex items-center gap-3">
+                      <div className="text-3xl">{player.avatar}</div>
+                      <div>
+                        <p className="font-bold text-lg text-foreground">
+                          {player.name}
+                          {player.isCurrentUser && (
+                            <span className="ml-2 text-xs bg-blue-500 text-white px-2 py-1 rounded-full">
+                              Vous
+                            </span>
+                          )}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {player.xp.toLocaleString()} XP
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Medal for top 3 */}
+                  {player.rank <= 3 && (
+                    <div className="text-3xl">
+                      {player.rank === 1 && "🥇"}
+                      {player.rank === 2 && "🥈"}
+                      {player.rank === 3 && "🥉"}
+                    </div>
+                  )}
+                </div>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Info Footer */}
+        <Card className="p-4 bg-blue-50 border-blue-200">
+          <p className="text-sm text-center text-blue-800">
+            💡 Le classement se réinitialise chaque mois. Continuez à apprendre
+            pour grimper dans le classement et remporter des récompenses !
+          </p>
+        </Card>
+      </div>
+
+      {/* Divider */}
+      <div className="px-4 py-8">
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t-2 border-gray-200"></div>
+          </div>
+          <div className="relative flex justify-center">
+            <span className="bg-gradient-to-b from-orange-50 to-yellow-50 px-4 text-lg font-bold text-foreground">
+              ⭐ Mes Trophées Personnels
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Personal Stats */}
+      <div className="px-4 pb-6">
+        <div className="grid grid-cols-3 gap-3 max-w-md mx-auto">
+          <Card className="p-3 bg-white shadow-card">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-foreground">{unlockedCount}</div>
+              <div className="text-xs text-muted-foreground">Débloqués</div>
+            </div>
+          </Card>
+          <Card className="p-3 bg-white shadow-card">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-foreground">
+                {trophies.filter(t => t.isUnlocked).reduce((sum, t) => sum + t.xpReward, 0)}
+              </div>
+              <div className="text-xs text-muted-foreground">XP gagné</div>
+            </div>
+          </Card>
+          <Card className="p-3 bg-white shadow-card">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-foreground">
+                {Math.round(completionPercentage)}%
+              </div>
+              <div className="text-xs text-muted-foreground">Complétés</div>
+            </div>
+          </Card>
+        </div>
+      </div>
 
       {/* Category Filter */}
       <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-gray-200 px-4 py-3">
