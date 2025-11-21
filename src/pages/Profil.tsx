@@ -2,6 +2,8 @@ import { Trophy, Zap, Award, TrendingUp } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import profileAvatar from "@/assets/profile-avatar.png";
 
 const Profil = () => {
   return (
@@ -10,9 +12,10 @@ const Profil = () => {
       <header className="gradient-purple text-white">
         <div className="px-4 py-8">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center text-3xl font-bold">
-              A
-            </div>
+            <Avatar className="w-20 h-20 border-4 border-white/20">
+              <AvatarImage src={profileAvatar} alt="Antoine Dupont" />
+              <AvatarFallback className="text-2xl font-bold bg-white/20">A</AvatarFallback>
+            </Avatar>
             <div>
               <h1 className="text-2xl font-bold">Antoine Dupont</h1>
               <p className="text-white/80">Investisseur apprenti</p>
