@@ -68,7 +68,7 @@ const levels: Level[] = [
   { id: 9, title: "Expert", type: "lesson", color: "gold", isCompleted: false, isLocked: true, chapter: 2, unit: 2 },
   
   // Chapter 3 - Unit 3
-  { id: 10, title: "Challenge final", type: "boss", color: "gold", isCompleted: false, isLocked: true, chapter: 3, unit: 3 },
+  { id: 10, title: "Challenge final", type: "boss", color: "gold", isCompleted: false, isLocked: false, chapter: 3, unit: 3 },
 ];
 
 const Parcours = () => {
