@@ -4,24 +4,31 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { BnpCTA } from "@/components/BnpCTA";
 import { BottomNav } from "@/components/BottomNav";
 
 const SimulationInvestissement = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [investmentAmount, setInvestmentAmount] = useState<string>("5000");
   const [isSimulating, setIsSimulating] = useState(false);
   const [currentYear, setCurrentYear] = useState(0);
-  const [currentAmount, setCurrentAmount] = useState(10000);
+  const [currentAmount, setCurrentAmount] = useState(0);
   const [showResults, setShowResults] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
 
-  const initialAmount = 10000;
   const annualReturn = 0.07;
-  const years = 20;
+  const years = 10;
+  const initialAmount = parseFloat(investmentAmount) || 0;
   const finalAmount = initialAmount * Math.pow(1 + annualReturn, years);
   const totalGain = finalAmount - initialAmount;
 
   const startSimulation = () => {
+    if (!initialAmount || initialAmount < 100) {
+      return;
+    }
+    setHasStarted(true);
     setIsSimulating(true);
     setCurrentYear(0);
     setCurrentAmount(initialAmount);
@@ -38,7 +45,15 @@ const SimulationInvestissement = () => {
         clearInterval(interval);
         setShowResults(true);
       }
-    }, 150); // 150ms per year = 3 seconds total
+    }, 200); // 200ms per year = 2 seconds total
+  };
+
+  const resetSimulation = () => {
+    setHasStarted(false);
+    setIsSimulating(false);
+    setShowResults(false);
+    setCurrentYear(0);
+    setCurrentAmount(0);
   };
 
   return (
@@ -69,62 +84,86 @@ const SimulationInvestissement = () => {
           </div>
           <h1 className="text-3xl font-bold text-foreground">Challenge Final</h1>
           <p className="text-lg text-muted-foreground">
-            Simulation d'investissement sur 20 ans
+            Jeu de simulation PEA sur 10 ans
           </p>
         </motion.div>
 
-        {/* Explanation Card */}
-        {!isSimulating && !showResults && (
+        {/* Investment Input */}
+        {!hasStarted && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
+            className="space-y-6"
           >
             <Card className="p-6 shadow-elevated bg-white border-2 border-purple-200">
               <div className="space-y-4">
                 <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
-                  <TrendingUp className="w-7 h-7 text-purple-500" />
-                  Le pouvoir de l'investissement long terme
+                  <DollarSign className="w-7 h-7 text-purple-500" />
+                  Combien voulez-vous investir ?
                 </h2>
 
                 <p className="text-foreground leading-relaxed">
-                  Vous allez simuler un investissement de{" "}
-                  <strong className="text-purple-600">10 000 €</strong> dans un PEA
-                  avec un rendement annuel moyen de{" "}
-                  <strong className="text-purple-600">7%</strong> sur{" "}
-                  <strong className="text-purple-600">20 ans</strong>.
+                  Choisissez un montant fictif à placer dans un PEA avec un
+                  rendement annuel de <strong className="text-purple-600">7%</strong> sur{" "}
+                  <strong className="text-purple-600">10 ans</strong>.
                 </p>
+
+                <div className="space-y-3">
+                  <label className="text-sm font-medium text-foreground">
+                    Montant de l'investissement (€)
+                  </label>
+                  <Input
+                    type="number"
+                    min="100"
+                    max="1000000"
+                    step="100"
+                    value={investmentAmount}
+                    onChange={(e) => setInvestmentAmount(e.target.value)}
+                    className="text-2xl font-bold text-center h-16"
+                    placeholder="5000"
+                  />
+                  <div className="flex gap-2 flex-wrap">
+                    {[1000, 5000, 10000, 20000].map((amount) => (
+                      <Button
+                        key={amount}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setInvestmentAmount(amount.toString())}
+                        className="flex-1"
+                      >
+                        {amount.toLocaleString()} €
+                      </Button>
+                    ))}
+                  </div>
+                </div>
 
                 <div className="bg-blue-50 p-4 rounded-xl border-2 border-blue-200">
                   <h3 className="font-bold text-blue-800 mb-2 flex items-center gap-2">
                     <span className="text-2xl">💡</span>
-                    Pourquoi 7% ?
+                    Le pouvoir du temps
                   </h3>
                   <p className="text-sm text-blue-900">
-                    C'est le rendement annuel moyen historique des marchés
-                    actions européens sur le long terme. Les performances
-                    passées ne garantissent pas les performances futures, mais
-                    cela donne une bonne estimation.
-                  </p>
-                </div>
-
-                <div className="bg-yellow-50 p-4 rounded-xl border-2 border-yellow-200">
-                  <h3 className="font-bold text-yellow-800 mb-2 flex items-center gap-2">
-                    <span className="text-2xl">⚡</span>
-                    L'effet des intérêts composés
-                  </h3>
-                  <p className="text-sm text-yellow-900">
-                    Vos gains génèrent eux-mêmes des gains ! C'est l'effet
-                    boule de neige qui fait toute la différence sur le long
-                    terme.
+                    Avec un rendement de 7% par an, votre argent double
+                    approximativement tous les 10 ans grâce aux intérêts composés.
                   </p>
                 </div>
               </div>
             </Card>
+
+            <Button
+              className="w-full gradient-purple text-white font-bold py-8 text-xl rounded-2xl shadow-button hover:shadow-elevated transition-all active:translate-y-1"
+              size="lg"
+              onClick={startSimulation}
+              disabled={!initialAmount || initialAmount < 100}
+            >
+              <Zap className="mr-2 w-6 h-6" fill="currentColor" />
+              Lancer la simulation
+            </Button>
           </motion.div>
         )}
 
-        {/* Start Button */}
-        {!isSimulating && !showResults && (
+        {/* Simulation Animation */}
+        {isSimulating && !showResults && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -193,20 +232,29 @@ const SimulationInvestissement = () => {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
-              {/* Celebration */}
+              {/* Big Gain Card */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", duration: 0.6 }}
-                className="text-center"
               >
-                <div className="text-8xl mb-4">🎉</div>
-                <h2 className="text-3xl font-bold text-foreground mb-2">
-                  Félicitations !
-                </h2>
-                <p className="text-lg text-muted-foreground">
-                  Voici ce que vous auriez gagné
-                </p>
+                <Card className="p-8 bg-gradient-to-br from-green-500 to-emerald-600 text-white border-0 shadow-elevated">
+                  <div className="text-center space-y-4">
+                    <div className="text-6xl">🎉</div>
+                    <h2 className="text-2xl font-bold">Vous avez gagné</h2>
+                    <motion.p
+                      initial={{ scale: 1.5, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ delay: 0.2 }}
+                      className="text-6xl font-bold"
+                    >
+                      +{Math.round(totalGain).toLocaleString()} €
+                    </motion.p>
+                    <p className="text-xl text-white/90">
+                      En {years} ans d'investissement PEA
+                    </p>
+                  </div>
+                </Card>
               </motion.div>
 
               {/* KPIs */}
@@ -257,22 +305,21 @@ const SimulationInvestissement = () => {
                 </motion.div>
               </div>
 
-              {/* Big Result Card */}
+              {/* Fun Fact Card */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4 }}
               >
-                <Card className="p-8 bg-gradient-to-br from-yellow-400 to-orange-500 text-white border-0 shadow-elevated">
-                  <div className="text-center space-y-4">
-                    <div className="text-5xl">💰</div>
-                    <h3 className="text-2xl font-bold">
+                <Card className="p-6 bg-gradient-to-br from-blue-500 to-purple-600 text-white border-0 shadow-elevated">
+                  <div className="text-center space-y-3">
+                    <div className="text-4xl">💰</div>
+                    <h3 className="text-xl font-bold">
                       Votre argent a été multiplié par{" "}
                       {(finalAmount / initialAmount).toFixed(1)}x !
                     </h3>
-                    <p className="text-lg text-white/90">
-                      C'est ça, la magie des intérêts composés et de
-                      l'investissement long terme dans un PEA.
+                    <p className="text-sm text-white/90">
+                      C'est la magie des intérêts composés sur {years} ans
                     </p>
                   </div>
                 </Card>
@@ -286,49 +333,29 @@ const SimulationInvestissement = () => {
               >
                 <Card className="p-6 bg-white border-2 border-gray-200">
                   <h3 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-                    <span className="text-2xl">📊</span>
-                    Points clés à retenir
+                    <span className="text-2xl">🎓</span>
+                    Ce que vous avez appris
                   </h3>
                   <ul className="space-y-3">
                     <li className="flex items-start gap-3">
                       <span className="text-green-500 font-bold text-xl">✓</span>
                       <span className="text-foreground">
-                        Plus vous investissez tôt, plus les intérêts composés
-                        travaillent pour vous
+                        Le PEA permet de faire fructifier votre épargne avec une fiscalité avantageuse après 5 ans
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="text-green-500 font-bold text-xl">✓</span>
                       <span className="text-foreground">
-                        Le PEA offre une fiscalité avantageuse après 5 ans
-                        (seulement 17,2% de prélèvements sociaux)
+                        Un rendement moyen de 7% permet de doubler son capital tous les 10 ans
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="text-green-500 font-bold text-xl">✓</span>
                       <span className="text-foreground">
-                        La régularité des versements permet de lisser les risques
+                        Les intérêts composés font la différence sur le long terme
                       </span>
                     </li>
                   </ul>
-                </Card>
-              </motion.div>
-
-              {/* XP Reward */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.6 }}
-                className="text-center"
-              >
-                <Card className="p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 shadow-elevated inline-block">
-                  <div className="flex items-center gap-3">
-                    <Zap className="w-8 h-8" fill="currentColor" />
-                    <div className="text-left">
-                      <p className="text-sm text-white/90">Tu as gagné</p>
-                      <p className="text-3xl font-bold">+100 XP</p>
-                    </div>
-                  </div>
                 </Card>
               </motion.div>
 
@@ -352,12 +379,7 @@ const SimulationInvestissement = () => {
                   variant="outline"
                   className="w-full font-semibold py-6 text-lg rounded-2xl"
                   size="lg"
-                  onClick={() => {
-                    setIsSimulating(false);
-                    setShowResults(false);
-                    setCurrentYear(0);
-                    setCurrentAmount(initialAmount);
-                  }}
+                  onClick={resetSimulation}
                 >
                   Refaire la simulation
                 </Button>
