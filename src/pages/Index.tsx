@@ -13,18 +13,18 @@ const reels = [
     videoUrl: "https://tdqtkzzcrdybyvywkubq.supabase.co/storage/v1/object/public/reels/AQPKCAUIoacgAAB85RLl3d8xFBBEyLHDA3NFATe0NjGOWETw0BC0Zz-ZdfVjZPkUxkwNsTF00YiLdmHwzYnknxZr4zrDMSDzkRqdZbM.mp4",
   },
   {
-    id: "crypto",
-    title: "Crypto : risques et opportunités",
-    category: "Innovation",
-    description: "Tout savoir sur les cryptomonnaies avant d'investir",
-    videoUrl: "https://tdqtkzzcrdybyvywkubq.supabase.co/storage/v1/object/public/reels/AQPLlNFmU7rGtQbZzK0dyj3l6FopfFUdeK9t4oltWm_L1Fr-6yncGBIeRYacFy8SIBOZoHjAv8LB_lMmGNn7m6fwGGW9Jf-tkXsafKA.mp4",
-  },
-  {
     id: "etf",
     title: "ETF pour débutants",
     category: "Investissement",
     description: "Investis facilement avec les fonds indiciels ETF",
     videoUrl: "https://tdqtkzzcrdybyvywkubq.supabase.co/storage/v1/object/public/reels/AQMBU_gzffV-nXqyx3BgaiI6kaYRVOu-84f1IALv_Mxu43QPhT8iRSIUqEqKOQY_VKuzWyQyOQpBo7V3c8T9jjLQdFy8M4kTgG-io1c.mp4",
+  },
+  {
+    id: "crypto",
+    title: "Crypto : risques et opportunités",
+    category: "Innovation",
+    description: "Tout savoir sur les cryptomonnaies avant d'investir",
+    videoUrl: "https://tdqtkzzcrdybyvywkubq.supabase.co/storage/v1/object/public/reels/AQPLlNFmU7rGtQbZzK0dyj3l6FopfFUdeK9t4oltWm_L1Fr-6yncGBIeRYacFy8SIBOZoHjAv8LB_lMmGNn7m6fwGGW9Jf-tkXsafKA.mp4",
   },
   {
     id: "pea",
