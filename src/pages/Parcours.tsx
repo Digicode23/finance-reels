@@ -238,14 +238,21 @@ const Parcours = () => {
         })}
 
         {/* Final trophy */}
-        <div className="mt-20 mb-8 flex flex-col items-center">
-          <div className="w-32 h-32 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-2xl relative">
+        <motion.a
+          href="https://mabanque.bnpparibas/fr/bourse/les-comptes-dedies/plan-epargne-actions"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.05, y: -5 }}
+          whileTap={{ scale: 0.95 }}
+          className="mt-20 mb-8 flex flex-col items-center cursor-pointer group"
+        >
+          <div className="w-32 h-32 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-2xl relative transition-all group-hover:shadow-3xl">
             <Trophy className="w-16 h-16 text-white" />
             <div className="absolute inset-0 rounded-full bg-gradient-to-b from-white/40 via-transparent to-transparent" style={{ clipPath: "ellipse(70% 40% at 50% 20%)" }} />
           </div>
-          <span className="mt-4 text-2xl font-bold text-gray-800">Expert Certifié</span>
-          <span className="text-sm text-gray-500 mt-1">Termine tous les niveaux pour débloquer</span>
-        </div>
+          <span className="mt-4 text-2xl font-bold text-gray-800 group-hover:text-yellow-600 transition-colors">Expert Certifié</span>
+          <span className="text-sm text-gray-500 mt-1 group-hover:text-gray-700 transition-colors">Ouvrir mon PEA chez BNP Paribas →</span>
+        </motion.a>
       </div>
 
       {/* Completion celebration */}
