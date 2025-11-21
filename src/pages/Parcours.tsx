@@ -8,6 +8,7 @@ import { LevelBubble } from "@/components/LevelBubble";
 import { PathConnector } from "@/components/PathConnector";
 
 import { CompletionCelebration } from "@/components/CompletionCelebration";
+import { Leaderboard } from "@/components/Leaderboard";
 
 const parcoursTitles: Record<string, string> = {
   pea: "C'est quoi un PEA ?",
@@ -76,6 +77,7 @@ const Parcours = () => {
   const title = id ? parcoursTitles[id] || "Parcours" : "Mes parcours";
   
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   
   const completedLevels = levels.filter(l => l.isCompleted).length;
 
@@ -141,11 +143,14 @@ const Parcours = () => {
               </div>
             </div>
 
-            {/* Trophy league */}
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-yellow-100 rounded-full cursor-pointer hover:bg-yellow-200 transition-colors">
+            {/* Trophy league - clickable */}
+            <button 
+              onClick={() => setShowLeaderboard(true)}
+              className="flex items-center gap-2 px-3 py-1.5 bg-yellow-100 rounded-full hover:bg-yellow-200 transition-colors"
+            >
               <Trophy className="w-5 h-5 text-yellow-600" />
               <span className="text-sm font-bold text-yellow-600">Division Or</span>
-            </div>
+            </button>
           </div>
 
           <h1 className="text-xl font-bold text-gray-800">{title}</h1>
@@ -261,6 +266,12 @@ const Parcours = () => {
         onComplete={() => setShowCelebration(false)}
         xpEarned={50}
         starsEarned={3}
+      />
+
+      {/* Leaderboard */}
+      <Leaderboard 
+        isOpen={showLeaderboard} 
+        onClose={() => setShowLeaderboard(false)} 
       />
 
       <BottomNav />
