@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Search, MoreVertical, ChevronUp, ChevronDown } from "lucide-react";
+import { ArrowRight, Search, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const reels = [
@@ -170,27 +170,6 @@ const Index = () => {
             En apprendre plus
             <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
-        </div>
-
-        {/* Navigation arrows - visible on desktop */}
-        <div className="absolute inset-0 pointer-events-none">
-          {/* Previous button */}
-          <button
-            onClick={goToPrevious}
-            className="absolute top-1/2 left-4 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all pointer-events-auto z-40 shadow-elevated"
-            aria-label="Reel précédent"
-          >
-            <ChevronUp className="w-6 h-6" />
-          </button>
-
-          {/* Next button */}
-          <button
-            onClick={goToNext}
-            className="absolute bottom-32 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all pointer-events-auto z-40 shadow-elevated animate-bounce"
-            aria-label="Reel suivant"
-          >
-            <ChevronDown className="w-6 h-6" />
-          </button>
         </div>
       </div>
 
