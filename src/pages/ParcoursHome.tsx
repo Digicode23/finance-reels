@@ -116,10 +116,8 @@ const ParcoursHome = () => {
               >
                 {p.isLocked ? (
                   <Lock className="w-8 h-8 text-white" />
-                ) : p.progress > 0 ? (
-                  <Star className="w-8 h-8 text-white" fill="currentColor" />
                 ) : (
-                  <div className="text-3xl">📚</div>
+                  <Star className="w-8 h-8 text-white" fill={p.progress > 0 ? "currentColor" : "none"} />
                 )}
               </div>
 
