@@ -93,9 +93,12 @@ const Parcours = () => {
   };
 
   const handleLevelClick = (levelId: number) => {
-    // Simulate level completion for demo
-    // In real app, navigate to level
-    navigate(`/parcours/${id}/niveau/${levelId}`);
+    // Level 10 (Challenge final) goes to simulation
+    if (levelId === 10) {
+      navigate(`/parcours/${id}/simulation`);
+    } else {
+      navigate(`/parcours/${id}/niveau/${levelId}`);
+    }
   };
 
   return (
