@@ -6,40 +6,46 @@ import { Button } from "@/components/ui/button";
 
 const reels = [
   {
-    id: "pea",
-    title: "C'est quoi un PEA ?",
-    category: "Épargne",
-    description: "Découvre le Plan d'Épargne en Actions et ses avantages fiscaux",
-  },
-  {
-    id: "etf",
-    title: "ETF pour débutants",
-    category: "Investissement",
-    description: "Investis facilement avec les fonds indiciels ETF",
-  },
-  {
-    id: "immobilier",
-    title: "Immobilier vs Livrets",
-    category: "Patrimoine",
-    description: "Quel placement choisir pour ton épargne ?",
-  },
-  {
     id: "holding",
     title: "Le fonctionnement d'une holding",
     category: "Expert",
     description: "Comprendre la structure holding pour optimiser ton patrimoine",
-  },
-  {
-    id: "fiscalite",
-    title: "Optimiser sa fiscalité",
-    category: "Fiscalité",
-    description: "Les meilleures stratégies pour réduire tes impôts légalement",
+    videoUrl: "https://tdqtkzzcrdybyvywkubq.supabase.co/storage/v1/object/public/reels/AQPKCAUIoacgAAB85RLl3d8xFBBEyLHDA3NFATe0NjGOWETw0BC0Zz-ZdfVjZPkUxkwNsTF00YiLdmHwzYnknxZr4zrDMSDzkRqdZbM.mp4",
   },
   {
     id: "crypto",
     title: "Crypto : risques et opportunités",
     category: "Innovation",
     description: "Tout savoir sur les cryptomonnaies avant d'investir",
+    videoUrl: "https://tdqtkzzcrdybyvywkubq.supabase.co/storage/v1/object/public/reels/AQPLlNFmU7rGtQbZzK0dyj3l6FopfFUdeK9t4oltWm_L1Fr-6yncGBIeRYacFy8SIBOZoHjAv8LB_lMmGNn7m6fwGGW9Jf-tkXsafKA.mp4",
+  },
+  {
+    id: "etf",
+    title: "ETF pour débutants",
+    category: "Investissement",
+    description: "Investis facilement avec les fonds indiciels ETF",
+    videoUrl: "https://tdqtkzzcrdybyvywkubq.supabase.co/storage/v1/object/public/reels/AQMBU_gzffV-nXqyx3BgaiI6kaYRVOu-84f1IALv_Mxu43QPhT8iRSIUqEqKOQY_VKuzWyQyOQpBo7V3c8T9jjLQdFy8M4kTgG-io1c.mp4",
+  },
+  {
+    id: "pea",
+    title: "C'est quoi un PEA ?",
+    category: "Épargne",
+    description: "Découvre le Plan d'Épargne en Actions et ses avantages fiscaux",
+    videoUrl: "https://tdqtkzzcrdybyvywkubq.supabase.co/storage/v1/object/public/reels/AQOM6U2chf2Jp3f_xcSfiWv_vnUdzQOLHP8yOj8uPC1J_Y3KcDUU4VZbgnWGN03oeQPcGCOWt00qY4qnnKTZJAwIDjy4WoPl15YWpdc.mp4",
+  },
+  {
+    id: "fiscalite",
+    title: "Optimiser sa fiscalité",
+    category: "Fiscalité",
+    description: "Les meilleures stratégies pour réduire tes impôts légalement",
+    videoUrl: "https://tdqtkzzcrdybyvywkubq.supabase.co/storage/v1/object/public/reels/AQPDqfu9rKneByreMnwF_GDQT7PtFJvt-Lv26PVHfSZphwWbMfhavDzCDsy2a3gA2HsXWxfLWmANzKpv5kisssqtv8xcsQjqfBL0-mE.mp4",
+  },
+  {
+    id: "immobilier",
+    title: "Immobilier vs Livrets",
+    category: "Patrimoine",
+    description: "Quel placement choisir pour ton épargne ?",
+    videoUrl: "https://tdqtkzzcrdybyvywkubq.supabase.co/storage/v1/object/public/reels/AQMXmsqbAIWMkEujRd-COOFtKM_fC2X8GuSrPzolvCA3KrmWNSgOQio8U4EfcDJMnArwJhbuPoxow2zEylNEYzQnkLGB31aNz1vhn_E.mp4",
   },
 ];
 
@@ -131,10 +137,16 @@ const Index = () => {
 
       {/* Reel container */}
       <div className="relative h-full w-full">
-        {/* Video placeholder */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center">
-          <div className="text-6xl opacity-20">🎥</div>
-        </div>
+        {/* Video player */}
+        <video
+          key={currentReel.id}
+          className="absolute inset-0 w-full h-full object-cover"
+          src={currentReel.videoUrl}
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
 
         {/* Gradient overlay for readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
