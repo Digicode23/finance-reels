@@ -5,9 +5,9 @@ import { Progress } from "@/components/ui/progress";
 
 const Profil = () => {
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white pb-20">
       {/* Header */}
-      <header className="gradient-bnp text-white">
+      <header className="gradient-purple text-white">
         <div className="px-4 py-8">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center text-3xl font-bold">

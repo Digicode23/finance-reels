@@ -52,6 +52,14 @@ export default {
           green: "hsl(var(--bnp-green))",
           "green-dark": "hsl(var(--bnp-green-dark))",
         },
+        duo: {
+          green: "hsl(var(--duo-green))",
+          blue: "hsl(var(--duo-blue))",
+          purple: "hsl(var(--duo-purple))",
+          gold: "hsl(var(--duo-gold))",
+          pink: "hsl(var(--duo-pink))",
+          orange: "hsl(var(--duo-orange))",
+        },
         gold: "hsl(var(--gold))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
