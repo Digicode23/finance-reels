@@ -248,20 +248,6 @@ const Parcours = () => {
                       {/* Level button container */}
                       <div className={`flex items-center ${positionClass}`}>
                         <div className="relative flex flex-col items-center">
-                          {/* Connector line to next level */}
-                          {levelIndex < chapterLevels.length - 1 && (
-                            <div 
-                              className="absolute w-1.5 bg-gray-300 rounded-full shadow-sm"
-                              style={{
-                                height: "80px",
-                                top: "100px",
-                                left: "50%",
-                                transform: "translateX(-50%)",
-                                zIndex: 0,
-                              }}
-                            />
-                          )}
-
                           {/* Level button */}
                           <button
                             onClick={() => !level.isLocked && navigate(`/parcours/${id}/niveau/${level.id}`)}
@@ -284,14 +270,6 @@ const Parcours = () => {
                           {level.type === "chest" && !level.isCompleted && !level.isLocked && (
                             <div className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse shadow-lg z-20">
                               !
-                            </div>
-                          )}
-
-                          {level.isCompleted && (
-                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-20">
-                              <div className="bg-green-500 rounded-full p-1.5 shadow-elevated border-2 border-white">
-                                <CheckCircle className="w-5 h-5 text-white" fill="white" />
-                              </div>
                             </div>
                           )}
 
