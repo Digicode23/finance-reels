@@ -272,18 +272,6 @@ const Parcours = () => {
                               !
                             </div>
                           )}
-
-                          {/* Level title */}
-                          <div className="mt-9 text-center max-w-[120px]">
-                            <span 
-                              className={`
-                                text-sm font-bold block
-                                ${!level.isLocked ? "text-gray-700" : "text-gray-400"}
-                              `}
-                            >
-                              {level.title}
-                            </span>
-                          </div>
                         </div>
                       </div>
                     </div>
