@@ -16,6 +16,14 @@ const levelContent: Record<string, {
   correctAnswer: number; 
   isAdvanced: boolean;
   questionType?: "mcq" | "true-false" | "ordering";
+  isRevision?: boolean;
+  revisionQuestions?: Array<{
+    question: string;
+    answers: string[];
+    correctAnswer: number;
+    questionType?: "mcq" | "true-false" | "ordering";
+    from: string;
+  }>;
 }> = {
   "1": {
     title: "Introduction",
@@ -54,11 +62,48 @@ const levelContent: Record<string, {
   },
   "5": {
     title: "Révision",
-    content: "Révisons les points clés : le PEA permet d'investir en bourse avec des avantages fiscaux après 5 ans, vous pouvez y placer des actions européennes et des ETF, et le plafond est de 150 000€ pour un PEA classique.",
-    question: "Quel est l'avantage principal du PEA après 5 ans ?",
-    answers: ["Pas de frais", "Exonération d'impôt sur le revenu", "Rendement garanti"],
-    correctAnswer: 1,
+    content: "Révisons tout ce que tu as appris ! Ce quiz reprend les questions des niveaux précédents pour consolider tes connaissances sur le PEA.",
+    question: "Le PEA permet d'investir en bourse avec des avantages fiscaux",
+    answers: ["VRAI", "FAUX"],
+    correctAnswer: 0,
     isAdvanced: false,
+    questionType: "true-false",
+    isRevision: true,
+    revisionQuestions: [
+      {
+        question: "Le PEA permet d'investir en bourse avec des avantages fiscaux",
+        answers: ["VRAI", "FAUX"],
+        correctAnswer: 0,
+        questionType: "true-false",
+        from: "Niveau 1"
+      },
+      {
+        question: "Classez ces durées de détention PEA de la moins avantageuse à la plus avantageuse fiscalement :",
+        answers: ["Moins de 5 ans", "Entre 5 et 8 ans", "Plus de 8 ans"],
+        correctAnswer: 0,
+        questionType: "ordering",
+        from: "Niveau 2"
+      },
+      {
+        question: "Que signifie ETF ?",
+        answers: ["European Trading Fund", "Exchange Traded Fund", "Equity Transfer Fund"],
+        correctAnswer: 1,
+        from: "Niveau 3"
+      },
+      {
+        question: "Le PEA existe depuis 1985",
+        answers: ["VRAI", "FAUX"],
+        correctAnswer: 1,
+        questionType: "true-false",
+        from: "Niveau 4"
+      },
+      {
+        question: "Quel est l'avantage principal du PEA après 5 ans ?",
+        answers: ["Pas de frais", "Exonération d'impôt sur le revenu", "Rendement garanti"],
+        correctAnswer: 1,
+        from: "Révision finale"
+      }
+    ]
   },
   "6": {
     title: "Niveau avancé",
@@ -102,6 +147,8 @@ const Niveau = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [xpEarned, setXpEarned] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [revisionScore, setRevisionScore] = useState(0);
   
   const level = niveauId && levelContent[niveauId] ? levelContent[niveauId] : levelContent["1"];
   
@@ -110,6 +157,14 @@ const Niveau = () => {
     navigate(`/parcours/${id}`);
     return null;
   }
+
+  // Get current question for revision mode
+  const isRevisionMode = level.isRevision && level.revisionQuestions;
+  const currentQuestion = isRevisionMode && level.revisionQuestions 
+    ? level.revisionQuestions[currentQuestionIndex]
+    : level;
+  const totalQuestions = isRevisionMode && level.revisionQuestions ? level.revisionQuestions.length : 1;
+  const progressPercent = isRevisionMode ? ((currentQuestionIndex + (selectedAnswer !== null ? 1 : 0)) / totalQuestions) * 100 : selectedAnswer !== null ? 100 : 50;
   
   const handleAnswerClick = (index: number) => {
     if (selectedAnswer !== null) return; // Already answered
@@ -121,15 +176,28 @@ const Niveau = () => {
     }
     
     setSelectedAnswer(index);
-    const correct = index === level.correctAnswer;
+    const correct = index === currentQuestion.correctAnswer;
     setIsCorrect(correct);
     
     if (correct) {
       setXpEarned(50);
+      if (isRevisionMode) {
+        setRevisionScore(prev => prev + 1);
+      }
       // Animate XP gain
       setTimeout(() => {
         setXpEarned(0);
       }, 2000);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (isRevisionMode && level.revisionQuestions && currentQuestionIndex < level.revisionQuestions.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1);
+      setSelectedAnswer(null);
+      setIsCorrect(null);
+    } else {
+      navigate(`/parcours/${id}`);
     }
   };
 
@@ -142,7 +210,7 @@ const Niveau = () => {
     if (selectedAnswer === null) {
       return "border-gray-300 hover:border-duo-green hover:bg-green-50";
     }
-    if (index === level.correctAnswer) {
+    if (index === currentQuestion.correctAnswer) {
       return "border-green-500 bg-green-50";
     }
     if (index === selectedAnswer && !isCorrect) {
@@ -153,8 +221,8 @@ const Niveau = () => {
 
   // Get question icon based on type
   const getQuestionIcon = () => {
-    if (level.questionType === "true-false") return "🤷";
-    if (level.questionType === "ordering") return "📊";
+    if (currentQuestion.questionType === "true-false") return "🤷";
+    if (currentQuestion.questionType === "ordering") return "📊";
     return "🤔";
   };
 
@@ -173,7 +241,12 @@ const Niveau = () => {
             
             {/* Progress bar */}
             <div className="flex-1 mx-4">
-              <Progress value={selectedAnswer !== null ? 100 : 50} className="h-4 bg-gray-200" />
+              <Progress value={progressPercent} className="h-4 bg-gray-200" />
+              {isRevisionMode && (
+                <p className="text-xs text-center text-muted-foreground mt-1">
+                  Question {currentQuestionIndex + 1}/{totalQuestions}
+                </p>
+              )}
             </div>
 
             {/* Hearts */}
@@ -207,8 +280,16 @@ const Niveau = () => {
         {/* Lesson card */}
         <Card className="p-6 shadow-card bg-white border-2 border-gray-100">
           <div className="space-y-4">
+            {isRevisionMode && 'from' in currentQuestion && currentQuestion.from && (
+              <div className="inline-block px-3 py-1 rounded-full bg-purple-100 text-purple-700 text-sm font-semibold mb-2">
+                {currentQuestion.from}
+              </div>
+            )}
             <p className="text-foreground leading-relaxed text-lg">
-              {level.content}
+              {isRevisionMode ? 
+                `Révise les questions précédentes pour consolider tes connaissances !` : 
+                level.content
+              }
             </p>
             
             {level.isAdvanced && (
@@ -231,15 +312,15 @@ const Niveau = () => {
         <Card className="p-6 shadow-card bg-white border-2 border-gray-100">
           <h3 className="font-bold text-xl mb-2 flex items-center gap-2">
             <span className="text-2xl">{getQuestionIcon()}</span>
-            {level.questionType === "true-false" ? "Vrai ou Faux ?" : 
-             level.questionType === "ordering" ? "Ordonner" : "Question"}
+            {currentQuestion.questionType === "true-false" ? "Vrai ou Faux ?" : 
+             currentQuestion.questionType === "ordering" ? "Ordonner" : "Question"}
           </h3>
           <p className="text-foreground mb-6 text-lg">
-            {level.question}
+            {currentQuestion.question}
           </p>
           
           <div className="space-y-3">
-            {level.answers.map((answer, index) => (
+            {currentQuestion.answers.map((answer, index) => (
               <motion.button
                 key={index}
                 onClick={() => handleAnswerClick(index)}
@@ -256,14 +337,14 @@ const Niveau = () => {
               >
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-3">
-                    {level.questionType === "ordering" && (
+                    {currentQuestion.questionType === "ordering" && (
                       <span className="text-sm bg-gray-200 px-2 py-1 rounded-full font-bold">
                         {index + 1}
                       </span>
                     )}
                     {answer}
                   </span>
-                  {selectedAnswer !== null && index === level.correctAnswer && niveauId !== "10" && (
+                  {selectedAnswer !== null && index === currentQuestion.correctAnswer && niveauId !== "10" && (
                     <CheckCircle2 className="w-6 h-6 text-green-600" />
                   )}
                   {selectedAnswer === index && !isCorrect && niveauId !== "10" && (
@@ -315,11 +396,29 @@ const Niveau = () => {
           <Button 
             className="w-full gradient-bnp text-white font-bold py-6 text-lg rounded-2xl shadow-button hover:shadow-elevated transition-all active:translate-y-1"
             size="lg"
-            onClick={() => navigate(`/parcours/${id}`)}
+            onClick={handleNextQuestion}
           >
             <CheckCircle2 className="mr-2 w-6 h-6" />
-            Continuer
+            {isRevisionMode && currentQuestionIndex < totalQuestions - 1 ? "Question suivante" : "Continuer"}
           </Button>
+        )}
+
+        {/* Revision score */}
+        {isRevisionMode && isCorrect && currentQuestionIndex === totalQuestions - 1 && (
+          <Card className="p-6 bg-gradient-to-br from-green-100 to-emerald-100 border-2 border-green-200">
+            <div className="text-center space-y-2">
+              <div className="text-5xl mb-2">🎉</div>
+              <h3 className="font-bold text-2xl text-foreground">
+                Révision terminée !
+              </h3>
+              <p className="text-lg text-muted-foreground">
+                Score : {revisionScore}/{totalQuestions} bonnes réponses
+              </p>
+              <p className="text-sm text-green-700">
+                Tu as gagné {revisionScore * 50} XP au total !
+              </p>
+            </div>
+          </Card>
         )}
       </div>
 
