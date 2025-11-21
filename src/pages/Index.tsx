@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Search, MoreVertical } from "lucide-react";
+import { ArrowRight, Search, MoreVertical, ChevronUp, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const reels = [
@@ -47,20 +47,63 @@ const Index = () => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const goToNext = () => {
+    if (currentIndex < reels.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  const goToPrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
   const handlers = useSwipeable({
-    onSwipedUp: () => {
-      if (currentIndex < reels.length - 1) {
-        setCurrentIndex(currentIndex + 1);
-      }
-    },
-    onSwipedDown: () => {
-      if (currentIndex > 0) {
-        setCurrentIndex(currentIndex - 1);
-      }
-    },
+    onSwipedUp: goToNext,
+    onSwipedDown: goToPrevious,
     preventScrollOnSwipe: true,
     trackMouse: true,
   });
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+        goToPrevious();
+      } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+        goToNext();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentIndex]);
+
+  // Mouse wheel navigation
+  useEffect(() => {
+    let isScrolling = false;
+    
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      
+      if (isScrolling) return;
+      isScrolling = true;
+
+      if (e.deltaY > 0) {
+        goToNext();
+      } else if (e.deltaY < 0) {
+        goToPrevious();
+      }
+
+      setTimeout(() => {
+        isScrolling = false;
+      }, 500);
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => window.removeEventListener("wheel", handleWheel);
+  }, [currentIndex]);
 
   const currentReel = reels[currentIndex];
 
@@ -121,29 +164,53 @@ const Index = () => {
           </Button>
         </div>
 
-        {/* Progress indicators */}
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2">
+        {/* Progress indicators - clickable */}
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-40">
           {reels.map((_, index) => (
-            <div
+            <button
               key={index}
-              className={`w-1.5 h-8 rounded-full transition-all ${
+              onClick={() => setCurrentIndex(index)}
+              className={`w-1.5 h-8 rounded-full transition-all cursor-pointer hover:scale-110 ${
                 index === currentIndex
                   ? "bg-white shadow-elevated"
-                  : "bg-white/30"
+                  : "bg-white/30 hover:bg-white/50"
               }`}
+              aria-label={`Aller au reel ${index + 1}`}
             />
           ))}
         </div>
+
+        {/* Navigation arrows - visible on desktop */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Previous button */}
+          {currentIndex > 0 && (
+            <button
+              onClick={goToPrevious}
+              className="absolute top-1/2 left-4 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all pointer-events-auto z-40 shadow-elevated"
+              aria-label="Reel précédent"
+            >
+              <ChevronUp className="w-6 h-6" />
+            </button>
+          )}
+
+          {/* Next button */}
+          {currentIndex < reels.length - 1 && (
+            <button
+              onClick={goToNext}
+              className="absolute bottom-32 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all pointer-events-auto z-40 shadow-elevated animate-bounce"
+              aria-label="Reel suivant"
+            >
+              <ChevronDown className="w-6 h-6" />
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Swipe indicators */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/50 text-xs flex flex-col items-center gap-1">
-        {currentIndex < reels.length - 1 && (
-          <div className="animate-bounce">
-            <div className="text-2xl">↑</div>
-            <span>Swipe pour le suivant</span>
-          </div>
-        )}
+      {/* Desktop hint */}
+      <div className="absolute top-20 left-1/2 -translate-x-1/2 text-white/70 text-sm text-center hidden md:block pointer-events-none z-50">
+        <div className="bg-black/40 backdrop-blur-sm px-4 py-2 rounded-full">
+          Utilisez ↑ ↓ ou la molette pour naviguer
+        </div>
       </div>
     </div>
   );
