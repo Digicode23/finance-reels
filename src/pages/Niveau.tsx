@@ -9,7 +9,7 @@ import { Progress } from "@/components/ui/progress";
 
 const levelContent: Record<string, { title: string; content: string; question: string; answers: string[]; correctAnswer: number; isAdvanced: boolean }> = {
   "1": {
-    title: "Introduction au PEA",
+    title: "Introduction",
     content: "Le Plan d'Épargne en Actions (PEA) est un compte titres qui permet d'investir en bourse tout en bénéficiant d'avantages fiscaux exceptionnels. Il existe deux types : le PEA classique (jusqu'à 150 000€) et le PEA-PME (jusqu'à 225 000€).",
     question: "Quel est le plafond du PEA classique ?",
     answers: ["75 000€", "150 000€", "225 000€"],
@@ -17,7 +17,7 @@ const levelContent: Record<string, { title: string; content: string; question: s
     isAdvanced: false,
   },
   "2": {
-    title: "Fiscalité du PEA",
+    title: "Les bases",
     content: "Après 5 ans de détention, les gains réalisés sur un PEA sont exonérés d'impôt sur le revenu (seuls les prélèvements sociaux de 17,2% s'appliquent). C'est l'un des placements les plus avantageux fiscalement en France.",
     question: "Après combien d'années les gains du PEA sont-ils exonérés d'impôt sur le revenu ?",
     answers: ["3 ans", "5 ans", "8 ans"],
@@ -25,19 +25,67 @@ const levelContent: Record<string, { title: string; content: string; question: s
     isAdvanced: false,
   },
   "3": {
-    title: "Actions et ETF",
+    title: "Pratique",
     content: "Dans un PEA, vous pouvez investir dans des actions d'entreprises européennes et des ETF (fonds indiciels). Les ETF permettent de diversifier facilement votre portefeuille à moindre coût.",
     question: "Que signifie ETF ?",
     answers: ["European Trading Fund", "Exchange Traded Fund", "Equity Transfer Fund"],
     correctAnswer: 1,
     isAdvanced: false,
   },
-  "5": {
-    title: "Simulation d'investissement",
-    content: "Simulez votre stratégie d'investissement. Avec un versement mensuel de 200€ sur 20 ans et un rendement moyen de 7%, vous pourriez obtenir environ 104 000€.",
-    question: "Quelle est la clé d'un bon investissement en PEA ?",
-    answers: ["Investir tout d'un coup", "La régularité des versements", "Attendre le bon moment"],
+  "4": {
+    title: "Histoire",
+    content: "Le PEA a été créé en 1992 pour encourager l'investissement des Français dans les entreprises européennes. Depuis sa création, il est devenu l'un des placements préférés des investisseurs français grâce à ses avantages fiscaux.",
+    question: "En quelle année le PEA a-t-il été créé ?",
+    answers: ["1985", "1992", "2000"],
     correctAnswer: 1,
+    isAdvanced: false,
+  },
+  "5": {
+    title: "Révision",
+    content: "Révisons les points clés : le PEA permet d'investir en bourse avec des avantages fiscaux après 5 ans, vous pouvez y placer des actions européennes et des ETF, et le plafond est de 150 000€ pour un PEA classique.",
+    question: "Quel est l'avantage principal du PEA après 5 ans ?",
+    answers: ["Pas de frais", "Exonération d'impôt sur le revenu", "Rendement garanti"],
+    correctAnswer: 1,
+    isAdvanced: false,
+  },
+  "6": {
+    title: "Niveau avancé",
+    content: "Pour optimiser votre PEA, il est important de diversifier vos investissements. Investissez dans différents secteurs et zones géographiques pour réduire les risques. Les ETF sont parfaits pour cela.",
+    question: "Pourquoi est-il important de diversifier son PEA ?",
+    answers: ["Pour payer moins d'impôts", "Pour réduire les risques", "Pour augmenter le plafond"],
+    correctAnswer: 1,
+    isAdvanced: true,
+  },
+  "7": {
+    title: "Quiz",
+    content: "Les frais de gestion peuvent avoir un impact important sur vos rendements à long terme. Privilégiez les courtiers avec des frais réduits et les ETF à frais bas pour maximiser vos gains.",
+    question: "Quel type de frais faut-il surveiller dans un PEA ?",
+    answers: ["Frais de courtage uniquement", "Tous les frais (courtage, gestion, ETF)", "Aucun frais à surveiller"],
+    correctAnswer: 1,
+    isAdvanced: true,
+  },
+  "8": {
+    title: "Coffre bonus",
+    content: "Félicitations ! Vous avez débloqué un bonus : saviez-vous que vous pouvez transférer votre PEA d'une banque à une autre sans perdre l'ancienneté fiscale ? C'est un excellent moyen de réduire vos frais !",
+    question: "Peut-on transférer son PEA sans perdre l'ancienneté ?",
+    answers: ["Non, jamais", "Oui, tout le temps", "Seulement après 5 ans"],
+    correctAnswer: 1,
+    isAdvanced: true,
+  },
+  "9": {
+    title: "Expert",
+    content: "En tant qu'expert, vous devez connaître les stratégies avancées : le Dollar Cost Averaging (investissement régulier), le rééquilibrage annuel de portefeuille, et l'optimisation de la répartition actions/ETF.",
+    question: "Qu'est-ce que le Dollar Cost Averaging ?",
+    answers: ["Investir en dollars", "Investir régulièrement la même somme", "Acheter des actions américaines"],
+    correctAnswer: 1,
+    isAdvanced: true,
+  },
+  "10": {
+    title: "Challenge final",
+    content: "Bravo ! Vous maîtrisez maintenant tous les aspects du PEA. Vous savez comment l'ouvrir, le gérer, optimiser votre fiscalité et diversifier vos investissements. Il est temps de passer à l'action !",
+    question: "Êtes-vous prêt à ouvrir votre PEA ?",
+    answers: ["Oui, je me sens prêt !", "J'ai besoin de plus de temps", "Je vais y réfléchir"],
+    correctAnswer: 0,
     isAdvanced: true,
   },
 };
@@ -49,7 +97,13 @@ const Niveau = () => {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [xpEarned, setXpEarned] = useState(0);
   
-  const level = niveauId ? levelContent[niveauId] : levelContent["1"];
+  const level = niveauId && levelContent[niveauId] ? levelContent[niveauId] : levelContent["1"];
+  
+  // Safety check - redirect if level doesn't exist
+  if (!level) {
+    navigate(`/parcours/${id}`);
+    return null;
+  }
   
   const handleAnswerClick = (index: number) => {
     if (selectedAnswer !== null) return; // Already answered
