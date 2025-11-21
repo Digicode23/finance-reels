@@ -296,7 +296,7 @@ const Parcours = () => {
                           )}
 
                           {/* Level title */}
-                          <div className="mt-6 text-center max-w-[120px]">
+                          <div className="mt-9 text-center max-w-[120px]">
                             <span 
                               className={`
                                 text-sm font-bold block
