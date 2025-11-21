@@ -1,11 +1,12 @@
 import { ArrowLeft, Flame, Zap, Heart, Trophy } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { BottomNav } from "@/components/BottomNav";
 import { ChapterIsland } from "@/components/ChapterIsland";
 import { LevelBubble } from "@/components/LevelBubble";
 import { PathConnector } from "@/components/PathConnector";
-import { ProgressCharacter } from "@/components/ProgressCharacter";
+
 import { CompletionCelebration } from "@/components/CompletionCelebration";
 
 const parcoursTitles: Record<string, string> = {
@@ -171,15 +172,6 @@ const Parcours = () => {
 
               {/* Levels path */}
               <div className="relative space-y-8 mt-12">
-                {/* Progress character - shows on first chapter */}
-                {chapterIndex === 0 && completedLevels > 0 && (
-                  <ProgressCharacter
-                    position={getLevelPosition(completedLevels - 1)}
-                    levelIndex={completedLevels - 1}
-                    isVisible={true}
-                  />
-                )}
-
                 {chapterLevels.map((level, levelIndex) => {
                   const position = getLevelPosition(levelIndex);
                   const positionClass = 
@@ -220,6 +212,19 @@ const Parcours = () => {
                     </div>
                   );
                 })}
+
+                {/* Unit completion CTA */}
+                <div className="flex justify-center mt-12">
+                  <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all"
+                  >
+                    Révision de l'unité {chapter.unit}
+                  </motion.button>
+                </div>
               </div>
 
               {/* Separator between chapters (except last) */}
