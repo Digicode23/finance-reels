@@ -280,8 +280,23 @@ const Parcours = () => {
                             )}
                           </button>
 
+                          {/* Special indicators */}
+                          {level.type === "chest" && !level.isCompleted && !level.isLocked && (
+                            <div className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse shadow-lg z-20">
+                              !
+                            </div>
+                          )}
+
+                          {level.isCompleted && (
+                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-20">
+                              <div className="bg-green-500 rounded-full p-1.5 shadow-elevated border-2 border-white">
+                                <CheckCircle className="w-5 h-5 text-white" fill="white" />
+                              </div>
+                            </div>
+                          )}
+
                           {/* Level title */}
-                          <div className="mt-3 text-center max-w-[120px]">
+                          <div className="mt-6 text-center max-w-[120px]">
                             <span 
                               className={`
                                 text-sm font-bold block
@@ -291,21 +306,6 @@ const Parcours = () => {
                               {level.title}
                             </span>
                           </div>
-
-                          {/* Special indicators */}
-                          {level.type === "chest" && !level.isCompleted && !level.isLocked && (
-                            <div className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse shadow-lg z-20">
-                              !
-                            </div>
-                          )}
-
-                          {level.isCompleted && (
-                            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 z-20">
-                              <div className="bg-green-500 rounded-full p-1.5 shadow-elevated border-2 border-white">
-                                <CheckCircle className="w-5 h-5 text-white" fill="white" />
-                              </div>
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>
