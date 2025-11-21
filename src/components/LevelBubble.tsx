@@ -158,26 +158,6 @@ export const LevelBubble = ({
         )}
       </motion.button>
 
-      {/* Stars for completed levels */}
-      {isCompleted && stars > 0 && (
-        <motion.div 
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: index * 0.1 + 0.4, type: "spring" }}
-          className="flex gap-1 mt-2"
-        >
-          {[...Array(3)].map((_, i) => (
-            <Star
-              key={i}
-              className={cn(
-                "w-4 h-4",
-                i < stars ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
-              )}
-            />
-          ))}
-        </motion.div>
-      )}
-
       {/* Title */}
       <motion.span
         initial={{ opacity: 0, y: 10 }}
