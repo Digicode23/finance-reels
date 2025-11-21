@@ -1,28 +1,39 @@
 import { ArrowLeft, CheckCircle2, Star, Heart, Trophy } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { BnpCTA } from "@/components/BnpCTA";
 import { BottomNav } from "@/components/BottomNav";
 import { Progress } from "@/components/ui/progress";
 
-const levelContent: Record<string, { title: string; content: string; question: string; answers: string[]; correctAnswer: number; isAdvanced: boolean }> = {
+const levelContent: Record<string, { 
+  title: string; 
+  content: string; 
+  question: string; 
+  answers: string[]; 
+  correctAnswer: number; 
+  isAdvanced: boolean;
+  questionType?: "mcq" | "true-false" | "ordering";
+}> = {
   "1": {
     title: "Introduction",
     content: "Le Plan d'Épargne en Actions (PEA) est un compte titres qui permet d'investir en bourse tout en bénéficiant d'avantages fiscaux exceptionnels. Il existe deux types : le PEA classique (jusqu'à 150 000€) et le PEA-PME (jusqu'à 225 000€).",
-    question: "Quel est le plafond du PEA classique ?",
-    answers: ["75 000€", "150 000€", "225 000€"],
-    correctAnswer: 1,
+    question: "Le PEA permet d'investir en bourse avec des avantages fiscaux",
+    answers: ["VRAI", "FAUX"],
+    correctAnswer: 0,
     isAdvanced: false,
+    questionType: "true-false",
   },
   "2": {
     title: "Les bases",
     content: "Après 5 ans de détention, les gains réalisés sur un PEA sont exonérés d'impôt sur le revenu (seuls les prélèvements sociaux de 17,2% s'appliquent). C'est l'un des placements les plus avantageux fiscalement en France.",
-    question: "Après combien d'années les gains du PEA sont-ils exonérés d'impôt sur le revenu ?",
-    answers: ["3 ans", "5 ans", "8 ans"],
-    correctAnswer: 1,
+    question: "Classez ces durées de détention PEA de la moins avantageuse à la plus avantageuse fiscalement :",
+    answers: ["Moins de 5 ans", "Entre 5 et 8 ans", "Plus de 8 ans"],
+    correctAnswer: 0, // First item is already correct
     isAdvanced: false,
+    questionType: "ordering",
   },
   "3": {
     title: "Pratique",
@@ -35,10 +46,11 @@ const levelContent: Record<string, { title: string; content: string; question: s
   "4": {
     title: "Histoire",
     content: "Le PEA a été créé en 1992 pour encourager l'investissement des Français dans les entreprises européennes. Depuis sa création, il est devenu l'un des placements préférés des investisseurs français grâce à ses avantages fiscaux.",
-    question: "En quelle année le PEA a-t-il été créé ?",
-    answers: ["1985", "1992", "2000"],
+    question: "Le PEA existe depuis 1985",
+    answers: ["VRAI", "FAUX"],
     correctAnswer: 1,
     isAdvanced: false,
+    questionType: "true-false",
   },
   "5": {
     title: "Révision",
@@ -67,26 +79,20 @@ const levelContent: Record<string, { title: string; content: string; question: s
   "8": {
     title: "Coffre bonus",
     content: "Félicitations ! Vous avez débloqué un bonus : saviez-vous que vous pouvez transférer votre PEA d'une banque à une autre sans perdre l'ancienneté fiscale ? C'est un excellent moyen de réduire vos frais !",
-    question: "Peut-on transférer son PEA sans perdre l'ancienneté ?",
-    answers: ["Non, jamais", "Oui, tout le temps", "Seulement après 5 ans"],
-    correctAnswer: 1,
+    question: "On peut transférer son PEA sans perdre l'ancienneté fiscale",
+    answers: ["VRAI", "FAUX"],
+    correctAnswer: 0,
     isAdvanced: true,
+    questionType: "true-false",
   },
   "9": {
     title: "Expert",
     content: "En tant qu'expert, vous devez connaître les stratégies avancées : le Dollar Cost Averaging (investissement régulier), le rééquilibrage annuel de portefeuille, et l'optimisation de la répartition actions/ETF.",
-    question: "Qu'est-ce que le Dollar Cost Averaging ?",
-    answers: ["Investir en dollars", "Investir régulièrement la même somme", "Acheter des actions américaines"],
-    correctAnswer: 1,
-    isAdvanced: true,
-  },
-  "10": {
-    title: "Challenge final",
-    content: "Bravo ! Vous maîtrisez maintenant tous les aspects du PEA. Vous savez comment l'ouvrir, le gérer, optimiser votre fiscalité et diversifier vos investissements. Il est temps de passer à l'action !",
-    question: "Êtes-vous prêt à ouvrir votre PEA ?",
-    answers: ["Oui, je me sens prêt !", "J'ai besoin de plus de temps", "Je vais y réfléchir"],
+    question: "Classez ces stratégies d'investissement du plus simple au plus complexe :",
+    answers: ["Investissement unique", "Dollar Cost Averaging", "Rééquilibrage de portefeuille"],
     correctAnswer: 0,
     isAdvanced: true,
+    questionType: "ordering",
   },
 };
 
@@ -108,6 +114,12 @@ const Niveau = () => {
   const handleAnswerClick = (index: number) => {
     if (selectedAnswer !== null) return; // Already answered
     
+    // For niveau 10, redirect to simulation
+    if (niveauId === "10") {
+      navigate(`/parcours/${id}/simulation`);
+      return;
+    }
+    
     setSelectedAnswer(index);
     const correct = index === level.correctAnswer;
     setIsCorrect(correct);
@@ -122,6 +134,11 @@ const Niveau = () => {
   };
 
   const getAnswerClass = (index: number) => {
+    // Special styling for niveau 10
+    if (niveauId === "10") {
+      return "border-purple-300 hover:border-purple-500 hover:bg-purple-50 bg-gradient-to-r from-purple-50 to-blue-50";
+    }
+    
     if (selectedAnswer === null) {
       return "border-gray-300 hover:border-duo-green hover:bg-green-50";
     }
@@ -132,6 +149,13 @@ const Niveau = () => {
       return "border-red-500 bg-red-50";
     }
     return "border-gray-300 opacity-50";
+  };
+
+  // Get question icon based on type
+  const getQuestionIcon = () => {
+    if (level.questionType === "true-false") return "🤷";
+    if (level.questionType === "ordering") return "📊";
+    return "🤔";
   };
 
   return (
@@ -206,8 +230,9 @@ const Niveau = () => {
         {/* Quiz card */}
         <Card className="p-6 shadow-card bg-white border-2 border-gray-100">
           <h3 className="font-bold text-xl mb-2 flex items-center gap-2">
-            <span className="text-2xl">🤔</span>
-            Question
+            <span className="text-2xl">{getQuestionIcon()}</span>
+            {level.questionType === "true-false" ? "Vrai ou Faux ?" : 
+             level.questionType === "ordering" ? "Ordonner" : "Question"}
           </h3>
           <p className="text-foreground mb-6 text-lg">
             {level.question}
@@ -215,27 +240,40 @@ const Niveau = () => {
           
           <div className="space-y-3">
             {level.answers.map((answer, index) => (
-              <button
+              <motion.button
                 key={index}
                 onClick={() => handleAnswerClick(index)}
-                disabled={selectedAnswer !== null}
+                disabled={selectedAnswer !== null && niveauId !== "10"}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 className={`
                   w-full p-4 text-left rounded-2xl border-2 transition-all font-medium text-lg
                   ${getAnswerClass(index)}
-                  ${selectedAnswer === null ? "active:scale-95" : ""}
-                  disabled:cursor-not-allowed
+                  ${selectedAnswer === null || niveauId === "10" ? "active:scale-95" : ""}
+                  ${niveauId === "10" ? "cursor-pointer" : ""}
+                  ${selectedAnswer !== null && niveauId !== "10" ? "disabled:cursor-not-allowed" : ""}
                 `}
               >
                 <div className="flex items-center justify-between">
-                  <span>{answer}</span>
-                  {selectedAnswer !== null && index === level.correctAnswer && (
+                  <span className="flex items-center gap-3">
+                    {level.questionType === "ordering" && (
+                      <span className="text-sm bg-gray-200 px-2 py-1 rounded-full font-bold">
+                        {index + 1}
+                      </span>
+                    )}
+                    {answer}
+                  </span>
+                  {selectedAnswer !== null && index === level.correctAnswer && niveauId !== "10" && (
                     <CheckCircle2 className="w-6 h-6 text-green-600" />
                   )}
-                  {selectedAnswer === index && !isCorrect && (
+                  {selectedAnswer === index && !isCorrect && niveauId !== "10" && (
                     <div className="w-6 h-6 text-red-600 font-bold">✗</div>
                   )}
+                  {niveauId === "10" && (
+                    <span className="text-2xl">🚀</span>
+                  )}
                 </div>
-              </button>
+              </motion.button>
             ))}
           </div>
 
